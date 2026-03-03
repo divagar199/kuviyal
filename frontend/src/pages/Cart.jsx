@@ -25,7 +25,7 @@ export default function Cart() {
   const handleCheckout = async () => {
     if (cartItems.length === 0) return;
     try {
-      const { data: order } = await axios.post('http://localhost:5000/api/payment/order', { amount: totalAmount });
+      const { data: order } = await axios.post('https://kuviyal-books.onrender.com/api/payment/order', { amount: totalAmount });
 
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
@@ -37,7 +37,7 @@ export default function Cart() {
         theme: { color: "#1D4ED8" },
         handler: async function (response) {
           const bookIds = cartItems.map(item => item._id);
-          await axios.post('http://localhost:5000/api/payment/verify', { userEmail, bookIds });
+          await axios.post('https://kuviyal-books.onrender.com/api/payment/verify', { userEmail, bookIds });
           
           alert("Payment Successful! Books added to your library.");
           localStorage.removeItem('cart');

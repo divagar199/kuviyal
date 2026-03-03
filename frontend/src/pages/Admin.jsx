@@ -41,7 +41,7 @@ export default function Admin() {
       await supabase.storage.from('books').upload(pdfName, pdfFile);
       const { data: pdfData } = supabase.storage.from('books').getPublicUrl(pdfName);
 
-      await axios.post('http://localhost:5000/api/admin/add-book', {
+      await axios.post('https://kuviyal-books.onrender.com/api/admin/add-book', {
         title, price: Number(price), coverImage: coverData.publicUrl, pdfUrl: pdfData.publicUrl
       });
 

@@ -10,7 +10,7 @@ export default function Home() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/books")
+      .get("https://kuviyal-books.onrender.com/api/books")
       .then((res) => setBooks(res.data))
       .catch((err) => console.error("Error fetching books:", err));
   }, []);
