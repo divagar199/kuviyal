@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { signInWithPopup, signInWithRedirect } from 'firebase/auth';
+import { useEffect, useState } from 'react';
+import { getRedirectResult, signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import { auth, provider } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import Toast from '../components/Toast';
@@ -7,6 +7,22 @@ import Toast from '../components/Toast';
 export default function Login() {
   const navigate = useNavigate();
   const [toast, setToast] = useState(null);
+
+  useEffect(() => {
+    const handleRedirectResult = async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result && result.user) {
+          navigate('/home');
+        }
+      } catch (error) {
+        console.error('Redirect sign-in failed:', error);
+        setToast({ message: 'Redirect login failed. Please try again.', type: 'error' });
+      }
+    };
+
+    handleRedirectResult();
+  }, [navigate]);
 
   const handleLogin = async () => {
     try {
