@@ -3,7 +3,9 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  authDomain: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? import.meta.env.VITE_FIREBASE_AUTH_DOMAIN
+    : window.location.hostname,
 };
 
 if (!firebaseConfig.apiKey || !firebaseConfig.authDomain) {
