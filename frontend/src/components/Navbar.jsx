@@ -1,20 +1,16 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signOut } from 'firebase/auth';
-import { auth } from '../firebase';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   
-  const userEmail = localStorage.getItem('userEmail');
-  const isAdmin = userEmail === "divagar.m.msc.cs@gmail.com";
+  const { userEmail, isAdmin, logout } = useAuth();
 
   const handleLogout = async () => {
     try {
-      await signOut(auth);
-      localStorage.removeItem('userEmail');
-      localStorage.removeItem('cart');
+      await logout();
       navigate('/');
     } catch (error) {
       console.error("Logout failed:", error);

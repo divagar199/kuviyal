@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
@@ -17,13 +18,9 @@ export default function Admin() {
   const [coverFile, setCoverFile] = useState(null);
   const [pdfFile, setPdfFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
   
+  const { isAdmin } = useAuth();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (localStorage.getItem('userEmail') === "divagar.m.msc.cs@gmail.com") setIsAdmin(true);
-  }, []);
 
   if (!isAdmin) return <div className="min-h-screen flex items-center justify-center bg-gray-50"><p>Access Denied</p></div>;
 

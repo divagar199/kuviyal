@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
@@ -8,7 +9,7 @@ export default function MyBooks() {
   const [myBooks, setMyBooks] = useState([]);
   const [isDownloading, setIsDownloading] = useState(false);
   const navigate = useNavigate();
-  const userEmail = localStorage.getItem('userEmail');
+  const { userEmail } = useAuth();
 
   useEffect(() => {
     if (userEmail) {
