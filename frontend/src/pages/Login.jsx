@@ -17,7 +17,18 @@ export default function Login() {
         }
       } catch (error) {
         console.error('Redirect sign-in failed:', error);
-        setToast({ message: 'Redirect login failed. Please try again.', type: 'error' });
+        if (error.code === 'auth/unauthorized-domain') {
+          console.error(
+            `DEVELOPER ERROR: The domain "${window.location.hostname}" is not authorized in the Firebase Console.\n` +
+            `Please go to Firebase Console > Authentication > Settings > Authorized domains and add "${window.location.hostname}".`
+          );
+          setToast({
+            message: `Login failed: Domain "${window.location.hostname}" is not authorized in your Firebase project.`,
+            type: 'error',
+          });
+        } else {
+          setToast({ message: 'Redirect login failed. Please try again.', type: 'error' });
+        }
       }
     };
 
@@ -30,6 +41,17 @@ export default function Login() {
       navigate('/home');
     } catch (error) {
       console.error('Login failed:', error);
+      if (error.code === 'auth/unauthorized-domain') {
+        console.error(
+          `DEVELOPER ERROR: The domain "${window.location.hostname}" is not authorized in the Firebase Console.\n` +
+          `Please go to Firebase Console > Authentication > Settings > Authorized domains and add "${window.location.hostname}".`
+        );
+        setToast({
+          message: `Login failed: Domain "${window.location.hostname}" is not authorized in your Firebase project.`,
+          type: 'error',
+        });
+        return;
+      }
       if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
         setToast({
           message: 'Popup was blocked. Redirecting to Google sign-in instead...',
@@ -38,7 +60,7 @@ export default function Login() {
         await signInWithRedirect(auth, provider);
         return;
       }
-      setToast({ message: 'Login failed. Please try again.', type: 'error' });
+      setToast({ message: `Login failed: ${error.message || 'Please try again.'}`, type: 'error' });
     }
   };
 
