@@ -6,6 +6,13 @@ const firebaseConfig = {
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
 };
 
+if (!firebaseConfig.apiKey || !firebaseConfig.authDomain) {
+  console.warn(
+    "Firebase config is missing. Make sure VITE_FIREBASE_API_KEY and VITE_FIREBASE_AUTH_DOMAIN are set in your environment."
+  );
+}
+
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const provider = new GoogleAuthProvider();
+provider.setCustomParameters({ prompt: "select_account" });

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { signInWithPopup } from 'firebase/auth';
+import { signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import { auth, provider } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import Toast from '../components/Toast';
@@ -13,8 +13,16 @@ export default function Login() {
       await signInWithPopup(auth, provider);
       navigate('/home');
     } catch (error) {
-      console.error("Login failed:", error);
-      setToast({ message: "Login failed. Please try again.", type: "error" });
+      console.error('Login failed:', error);
+      if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
+        setToast({
+          message: 'Popup was blocked. Redirecting to Google sign-in instead...',
+          type: 'warning',
+        });
+        await signInWithRedirect(auth, provider);
+        return;
+      }
+      setToast({ message: 'Login failed. Please try again.', type: 'error' });
     }
   };
 
